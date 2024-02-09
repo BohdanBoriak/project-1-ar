@@ -1,8 +1,19 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math"
+)
+
+func sqrt(x float64) string {
+	if x < 0 {
+		return sqrt(-x) + "i"
+	}
+	return fmt.Sprint(math.Sqrt(x))
+}
 
 func main() {
-	v := 42 // зміни мене!
-	fmt.Printf("v має тип %T\n", v)
+	a := sqrt(2)
+	b := sqrt(-4)
+	fmt.Println(a, b)
 }
