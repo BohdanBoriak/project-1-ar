@@ -1,22 +1,37 @@
 package main
 
-import (
-	"fmt"
-	"project-1-ar/domain"
-)
+import "fmt"
 
 func main() {
-	dmytro := domain.Human{
-		Id:   1,
-		Name: "Dmytro",
-		Age:  19,
+	names := []string{
+		"Vladislav",
+		"Artem",
+		"Maksym",
+		"Stanislav",
+		"Anastasia",
+		"Dmytro",
+		"Bohdan",
 	}
 
-	var viktoria domain.Human
-	viktoria.Id = 2
-	viktoria.Name = "Viktoria"
-	viktoria.Age = 19
-	viktoria.Country = "Ukraine"
+	names = append(names, "Vitalii")
+	names = append(names, "Viktoria")
 
-	fmt.Println(dmytro, viktoria)
+	fmt.Println(names)
+
+	var (
+		parni   []int
+		neparni []int
+	)
+
+	for i := 0; i <= 20; i++ {
+		if i%2 != 0 {
+			neparni = append(neparni, i)
+		}
+		if i%2 == 0 {
+			parni = append(parni, i)
+		}
+	}
+
+	fmt.Println(parni)
+	fmt.Println(neparni)
 }
