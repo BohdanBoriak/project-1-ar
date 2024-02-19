@@ -2,18 +2,21 @@ package main
 
 import (
 	"fmt"
-	"math"
+	"project-1-ar/domain"
 )
 
-func sqrt(x float64) string {
-	if x < 0 {
-		return sqrt(-x) + "i"
-	}
-	return fmt.Sprint(math.Sqrt(x))
-}
-
 func main() {
-	a := sqrt(2)
-	b := sqrt(-4)
-	fmt.Println(a, b)
+	dmytro := domain.Human{
+		Id:   1,
+		Name: "Dmytro",
+		Age:  19,
+	}
+
+	var viktoria domain.Human
+	viktoria.Id = 2
+	viktoria.Name = "Viktoria"
+	viktoria.Age = 19
+	viktoria.Country = "Ukraine"
+
+	fmt.Println(dmytro, viktoria)
 }
