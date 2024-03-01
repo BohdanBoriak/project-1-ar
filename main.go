@@ -1,9 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"math/rand"
+	"os"
 	"project-1-ar/domain"
+	"sort"
 	"strconv"
 	"time"
 )
@@ -20,33 +23,37 @@ func main() {
 	time.Sleep(1 * time.Second)
 
 	var users []domain.User
+	users = append(users, domain.User{Id: 1, Name: "Mykola", Time: 5 * time.Second})
+	users = append(users, domain.User{Id: 2, Name: "Vasyl", Time: 3 * time.Second})
+	users = append(users, domain.User{Id: 3, Name: "Sokrat", Time: 8 * time.Second})
 
-	menu()
-	for {
-		punct := ""
-		fmt.Scan(&punct)
+	sortAndSaveUsers(users)
 
-		switch punct {
-		case "1":
-			u := play()
-			if u.Id != 0 {
-				users = append(users, u)
-			}
-		case "2":
-			for _, u := range users {
-				fmt.Printf("id: %v, name: %s, time: %s\n",
-					u.Id,
-					u.Name,
-					u.Time,
-				)
-			}
-		case "3":
-			return
-		default:
-			fmt.Println("Зробіть правильний вибір.")
-		}
-		menu()
-	}
+	// for {
+	// 	menu()
+	// 	punct := ""
+	// 	fmt.Scan(&punct)
+
+	// 	switch punct {
+	// 	case "1":
+	// 		u := play()
+	// 		if u.Id != 0 {
+	// 			users = append(users, u)
+	// 		}
+	// 	case "2":
+	// 		for _, u := range users {
+	// 			fmt.Printf("id: %v, name: %s, time: %s\n",
+	// 				u.Id,
+	// 				u.Name,
+	// 				u.Time,
+	// 			)
+	// 		}
+	// 	case "3":
+	// 		return
+	// 	default:
+	// 		fmt.Println("Зробіть правильний вибір.")
+	// 	}
+	// }
 }
 
 func menu() {
@@ -110,4 +117,57 @@ func play() domain.User {
 	id++
 
 	return user
+}
+
+func sortAndSaveUsers(users []domain.User) {
+	sort.SliceStable(users, func(i, j int) bool {
+		return users[i].Time < users[j].Time
+	})
+
+	file, err := os.OpenFile("users.json", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
+	if err != nil {
+		fmt.Printf("Сталась помилка Т_Т: %s\n", err)
+	}
+	defer func(file *os.File) {
+		err = file.Close()
+		if err != nil {
+			fmt.Printf("Error: %s", err)
+		}
+	}(file)
+
+	encoder := json.NewEncoder(file)
+	err = encoder.Encode(users)
+	if err != nil {
+		fmt.Printf("Сталась помилка Т_Т: %s\n", err)
+	}
+}
+
+func showUserRate() []domain.User {
+	info, err := os.Stat("users.json")
+	if err != nil && !os.IsNotExist(err) {
+		return nil
+	}
+
+	var users []domain.User
+	if info != nil && info.Size() != 0 {
+		file, err := os.Open("users.json")
+		if err != nil {
+			return nil
+		}
+
+		defer func(file *os.File) {
+			err = file.Close()
+			if err != nil {
+				fmt.Printf("Error: %s", err)
+			}
+		}(file)
+
+		decoder := json.NewDecoder(file)
+		err = decoder.Decode(&users)
+		if err != nil {
+			return nil
+		}
+	}
+
+	return users
 }
