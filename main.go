@@ -22,38 +22,34 @@ func main() {
 	fmt.Println("Вітаємо у найкращій грі всіх часів!")
 	time.Sleep(1 * time.Second)
 
-	var users []domain.User
-	users = append(users, domain.User{Id: 1, Name: "Mykola", Time: 5 * time.Second})
-	users = append(users, domain.User{Id: 2, Name: "Vasyl", Time: 3 * time.Second})
-	users = append(users, domain.User{Id: 3, Name: "Sokrat", Time: 8 * time.Second})
+	for {
+		menu()
+		punct := ""
+		fmt.Scan(&punct)
 
-	sortAndSaveUsers(users)
-
-	// for {
-	// 	menu()
-	// 	punct := ""
-	// 	fmt.Scan(&punct)
-
-	// 	switch punct {
-	// 	case "1":
-	// 		u := play()
-	// 		if u.Id != 0 {
-	// 			users = append(users, u)
-	// 		}
-	// 	case "2":
-	// 		for _, u := range users {
-	// 			fmt.Printf("id: %v, name: %s, time: %s\n",
-	// 				u.Id,
-	// 				u.Name,
-	// 				u.Time,
-	// 			)
-	// 		}
-	// 	case "3":
-	// 		return
-	// 	default:
-	// 		fmt.Println("Зробіть правильний вибір.")
-	// 	}
-	// }
+		switch punct {
+		case "1":
+			u := play()
+			if u.Id != 0 {
+				users := showUserRate()
+				users = append(users, u)
+				sortAndSaveUsers(users)
+			}
+		case "2":
+			users := showUserRate()
+			for _, u := range users {
+				fmt.Printf("id: %v, name: %s, time: %s\n",
+					u.Id,
+					u.Name,
+					u.Time,
+				)
+			}
+		case "3":
+			return
+		default:
+			fmt.Println("Зробіть правильний вибір.")
+		}
+	}
 }
 
 func menu() {
